@@ -1,6 +1,10 @@
-package Authenticator;
+package main.java.Authenticator;
 
-public class AuthenticationService extends Authenticator{
+import main.java.Authenticator.Authenticator;
+
+public class AuthenticationService implements Authenticator {
+
+    private boolean authorized;
 
     @Override
     public boolean login(String userName, String password) {
@@ -9,6 +13,11 @@ public class AuthenticationService extends Authenticator{
 
     @Override
     public boolean register(String userName, String password) {
+        return false;
+    }
+
+    @Override
+    public boolean isAuthorized() {
         return false;
     }
 }

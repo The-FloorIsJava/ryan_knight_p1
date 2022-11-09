@@ -1,8 +1,6 @@
-package Authenticator;
+package main.java.Authenticator;
 
-public abstract class Authenticator {
-
-    private boolean authorized;
+public interface Authenticator {
 
     /**
      * Attempt to log user in, if successful, change status to authorized.
@@ -10,17 +8,15 @@ public abstract class Authenticator {
      * @param password - user's password.
      * @return true if login is successful, otherwise return false.
      * **/
-    public abstract boolean login(String userName, String password);
+    boolean login(String userName, String password);
 
     /**
      * Register user, setting a username and password.
      * **/
-    public abstract boolean register(String userName, String password);
+    boolean register(String userName, String password);
 
     /**
      * @return boolean indicating the authorizations status of the user.
      * **/
-    public boolean isAuthorized() {
-        return authorized;
-    };
+    boolean isAuthorized();
 }

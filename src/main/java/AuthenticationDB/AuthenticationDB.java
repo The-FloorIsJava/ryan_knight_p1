@@ -1,4 +1,4 @@
-package AuthenticationDB;
+package main.java.AuthenticationDB;
 
 public interface AuthenticationDB {
     /**
@@ -11,9 +11,19 @@ public interface AuthenticationDB {
 
     /**
      * Add new user to database.
-     * @param username, primary key, registration fails if key is taken.
+     * @param username, primary key.
      * @param password user's password.
+     * @throws IllegalArgumentException if username is taken.
      * @return true if registration succeeds, otherwise return false.
      * **/
-    boolean addNewUser(String username, String password);
+    boolean addNewUser(String username, String password) throws IllegalArgumentException;
+
+    /**
+     * Remove user from database
+     * @param username, primary key, method should handle instance where username is not found.
+     * @param password, user's password.
+     * @throws IllegalArgumentException if password does not match username.
+     * @return true if user is removed from database, otherwise returns false.
+     * */
+    boolean removeUser(String username, String password) throws IllegalArgumentException;
 }
