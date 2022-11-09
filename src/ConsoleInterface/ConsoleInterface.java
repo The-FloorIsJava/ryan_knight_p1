@@ -16,7 +16,4 @@ public class ConsoleInterface implements UserApplicationInterface{
 
     }
 
-    public void runApplication(){
-
-    }
 }
