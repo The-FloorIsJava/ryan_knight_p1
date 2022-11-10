@@ -31,4 +31,13 @@ public class Profile implements ProfileInterface {
         Ticket[] buffer = new Ticket[tickets.size()];
         return tickets.toArray(buffer);
     }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", tickets=" + tickets +
+                '}';
+    }
 }
