@@ -5,9 +5,10 @@ public interface AuthenticationDB {
      * Search database for corresponding username and password, if found return true.
      * @param username username, primary key.
      * @param  password user's password.
+     * @throws IllegalArgumentException if username is not in database
      * @return true if credentials are verified, false otherwise.
      * **/
-    boolean verifyUsernameAndPassword(String username, String password);
+    boolean verifyUsernameAndPassword(String username, String password) throws IllegalArgumentException;
 
     /**
      * Add new user to database.

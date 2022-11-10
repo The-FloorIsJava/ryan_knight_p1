@@ -13,8 +13,12 @@ public class TemporaryPasswordMapDB implements AuthenticationDB{
     }
 
     @Override
-    public boolean verifyUsernameAndPassword(String username, String password) {
-        return passwordMap.get(username).equals(password);
+    public boolean verifyUsernameAndPassword(String username, String password) throws IllegalArgumentException{
+        if (passwordMap.containsKey(username)) {
+            return passwordMap.get(username).equals(password);
+        } else {
+            throw new IllegalArgumentException("No account associated with username " + username);
+        }
     }
 
     @Override
