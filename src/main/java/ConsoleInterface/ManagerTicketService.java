@@ -1,6 +1,6 @@
 package main.java.ConsoleInterface;
 
-public class EmployeeInterface implements UserApplicationInterface{
+public class ManagerTicketService implements UserApplicationInterface{
     @Override
     public void userLogin() {
 

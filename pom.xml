@@ -7,6 +7,10 @@
     <groupId>ryan_knight_p1</groupId>
     <artifactId>ryan_knight_p1</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
 
-    
+
 </project>
