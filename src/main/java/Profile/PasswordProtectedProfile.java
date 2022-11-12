@@ -23,4 +23,11 @@ public interface PasswordProtectedProfile {
      * */
     void changePassword(String username, String oldPassword, String newPassword) throws BadPasswordException,
             AccountDoesNotExistException;
+
+    /**
+     * Return true if profile is for an administrator.
+     * @return true if the profile owner is an administrator, otherwise returns false.
+     * */
+    boolean isAdministrator();
+
 }
