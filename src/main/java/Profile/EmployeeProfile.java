@@ -11,7 +11,7 @@ public class EmployeeProfile implements PasswordProtectedProfile {
     private final List<Ticket> profileTickets;
     private final String username;
     private String password;
-    private boolean isAdministrator;
+    private final boolean isAdministrator;
     private final int minimumPasswordLength;
 
     public EmployeeProfile(String username, String password) throws BadPasswordException {
@@ -67,5 +67,8 @@ public class EmployeeProfile implements PasswordProtectedProfile {
         return isAdministrator;
     }
 
+    public void addTicket(double balance) {
+        profileTickets.add(new Ticket(username,balance));
+    }
 
 }
