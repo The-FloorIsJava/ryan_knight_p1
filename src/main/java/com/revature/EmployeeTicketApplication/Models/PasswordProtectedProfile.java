@@ -5,14 +5,6 @@ import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordExcep
 
 public interface PasswordProtectedProfile {
 
-    /**
-     * Verify username exists and matches given password.
-     * @param username the unique username.
-     * @param password used to unlock account.
-     * @throws AccountDoesNotExistException if username is not associated with an account.
-     * @return true if password is correct, otherwise returns false.
-     * */
-    boolean verifyCredentials(String username, String password) throws AccountDoesNotExistException;
 
     /**
      * Change password associated with account.

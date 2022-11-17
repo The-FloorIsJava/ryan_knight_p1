@@ -27,17 +27,6 @@ public class EmployeeProfile implements PasswordProtectedProfile {
     }
 
     /**
-     * See PasswordProtectedProfile interface for details.
-     * */
-    @Override
-    public boolean verifyCredentials(String username, String password) throws AccountDoesNotExistException {
-        if (!this.username.equals(username)) {
-            throw new AccountDoesNotExistException();
-        }
-        return this.password.equals(password);
-    }
-
-    /**
      * Change password associated with account.
      * @param username associated with account.
      * @param oldPassword associated with account.
