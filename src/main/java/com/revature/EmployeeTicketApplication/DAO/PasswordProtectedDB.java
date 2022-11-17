@@ -7,8 +7,9 @@ public interface PasswordProtectedDB {
     /**
      * Add profile to database.
      * @param passwordProtectedProfile profile being added.
+     * @return successfully created Profile or null.
      * */
-    void addProfile(PasswordProtectedProfile passwordProtectedProfile);
+    PasswordProtectedProfile addProfile(PasswordProtectedProfile passwordProtectedProfile);
 
     /**
      * Remove profile associated with username, which is the profile's primary key.
