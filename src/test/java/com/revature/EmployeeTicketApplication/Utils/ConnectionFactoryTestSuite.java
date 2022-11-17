@@ -1,4 +1,4 @@
-package com.revature.EmployeeTicketApplication;
+package com.revature.EmployeeTicketApplication.Utils;
 
 import com.revature.EmployeeTicketApplication.Utils.ConnectionFactory;
 import org.junit.jupiter.api.Assertions;
