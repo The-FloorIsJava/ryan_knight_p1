@@ -1,4 +1,4 @@
-package com.revature.EmployeeTicketApplication.Profile;
+package com.revature.EmployeeTicketApplication.DAO;
 
 import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
 
