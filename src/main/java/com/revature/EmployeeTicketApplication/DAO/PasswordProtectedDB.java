@@ -38,4 +38,6 @@ public interface PasswordProtectedDB {
      * @param administrator getting profile, method must confirm administrator is a valid.
      * */
     PasswordProtectedProfile getProfile(String username, PasswordProtectedProfile administrator);
+
+
 }

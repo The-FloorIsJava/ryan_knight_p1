@@ -8,27 +8,29 @@ import java.util.List;
 
 public class EmployeeProfile implements PasswordProtectedProfile {
 
+    private final List<Ticket> profileTickets;
     private final String username;
 
     private String firstName;
     private String lastName;
     private String password;
     private final boolean isAdministrator;
-    private final int minimumPasswordLength;
 
-    public EmployeeProfile(String username, String firstName,String lastName, String password, boolean isAdministrator)
-            throws BadPasswordException {
 
+    public EmployeeProfile(String username, String firstName,String lastName,
+                           String password, boolean isAdministrator) {
+
+        this.profileTickets = new LinkedList<>();
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.minimumPasswordLength = 5;
+        this.password = password;
         this.isAdministrator = isAdministrator;
 
-        if (password.length() <= this.minimumPasswordLength) {
-            throw new BadPasswordException("Password to short, must contain "
-                    + minimumPasswordLength + " or more characters");
-        }
+    }
+
+    public EmployeeProfile(String username, String firstName,String lastName, String password){
+        this(username,firstName,lastName,password,false);
     }
 
     /**
@@ -47,11 +49,7 @@ public class EmployeeProfile implements PasswordProtectedProfile {
             throw new AccountDoesNotExistException();
         } else if (!this.password.equals(oldPassword)) {
             throw new BadPasswordException();
-        } else if (this.minimumPasswordLength <= newPassword.length()) {
-            throw new BadPasswordException("Password must contain at least "
-                    + this.minimumPasswordLength + " characters");
         }
-
         this.password = newPassword;
 
     }
@@ -61,8 +59,31 @@ public class EmployeeProfile implements PasswordProtectedProfile {
         return isAdministrator;
     }
 
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
     public void addTicket(double balance) {
         profileTickets.add(new Ticket(username,balance));
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 }

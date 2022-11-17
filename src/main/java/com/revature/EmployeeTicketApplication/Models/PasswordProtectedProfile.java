@@ -23,4 +23,12 @@ public interface PasswordProtectedProfile {
      * */
     boolean isAdministrator();
 
+    String getUsername();
+    String getFirstName();
+    String getLastName();
+    String getPassword();
+
+    void setFirstName(String firstName);
+    void setLastName(String lastName);
+
 }
