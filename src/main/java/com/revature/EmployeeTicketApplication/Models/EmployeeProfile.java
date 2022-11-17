@@ -8,17 +8,22 @@ import java.util.List;
 
 public class EmployeeProfile implements PasswordProtectedProfile {
 
-    private final List<Ticket> profileTickets;
     private final String username;
+
+    private String firstName;
+    private String lastName;
     private String password;
     private final boolean isAdministrator;
     private final int minimumPasswordLength;
 
-    public EmployeeProfile(String username, String password) throws BadPasswordException {
-        this.profileTickets = new LinkedList<>();
+    public EmployeeProfile(String username, String firstName,String lastName, String password, boolean isAdministrator)
+            throws BadPasswordException {
+
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.minimumPasswordLength = 5;
-        this.isAdministrator = false;
+        this.isAdministrator = isAdministrator;
 
         if (password.length() <= this.minimumPasswordLength) {
             throw new BadPasswordException("Password to short, must contain "

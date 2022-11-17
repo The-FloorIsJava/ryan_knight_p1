@@ -9,7 +9,7 @@ public class PostgressTicketDAO implements PasswordProtectedDB{
     @Override
     public PasswordProtectedProfile addProfile(PasswordProtectedProfile passwordProtectedProfile) {
 
-
+        return null;
 
     }
 
