@@ -1,4 +1,4 @@
-package com.revature.EmployeeTicketApplication.Profile;
+package com.revature.EmployeeTicketApplication.Models;
 
 public enum TicketStatus {
     PENDING,

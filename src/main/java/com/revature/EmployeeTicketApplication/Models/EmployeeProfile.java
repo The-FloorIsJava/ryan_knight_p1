@@ -1,4 +1,4 @@
-package com.revature.EmployeeTicketApplication.Profile;
+package com.revature.EmployeeTicketApplication.Models;
 
 import com.revature.EmployeeTicketApplication.AccountExceptions.AccountDoesNotExistException;
 import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordException;

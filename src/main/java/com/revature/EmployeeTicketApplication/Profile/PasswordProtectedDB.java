@@ -1,5 +1,7 @@
 package com.revature.EmployeeTicketApplication.Profile;
 
+import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
+
 public interface PasswordProtectedDB {
 
     /**

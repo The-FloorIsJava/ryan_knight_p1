@@ -54,7 +54,13 @@ public class ConnectionFactory {
      * */
     public Connection getConnection() {
         try {
-            return DriverManager.getConnection("url","user","password");
+
+            return DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"),
+                    properties.getProperty("password"));
+
+            /*return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres","postgres",
+                    "password");*/
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
