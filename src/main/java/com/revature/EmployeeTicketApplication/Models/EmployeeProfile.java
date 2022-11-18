@@ -19,6 +19,19 @@ public class EmployeeProfile implements PasswordProtectedProfile {
 
 
     public EmployeeProfile(String username, String firstName,String lastName,
+                           String password) {
+
+        this.profileTickets = new LinkedList<>();
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.isAdministrator = false;
+
+    }
+
+
+    protected EmployeeProfile(String username, String firstName,String lastName,
                            String password, boolean isAdministrator) {
 
         this.profileTickets = new LinkedList<>();
@@ -28,10 +41,6 @@ public class EmployeeProfile implements PasswordProtectedProfile {
         this.password = password;
         this.isAdministrator = isAdministrator;
 
-    }
-
-    public EmployeeProfile(String username, String firstName,String lastName, String password){
-        this(username,firstName,lastName,password,false);
     }
 
     /**
@@ -106,4 +115,6 @@ public class EmployeeProfile implements PasswordProtectedProfile {
     public int hashCode() {
         return Objects.hash(profileTickets, username, firstName, lastName, password, isAdministrator);
     }
+
+
 }

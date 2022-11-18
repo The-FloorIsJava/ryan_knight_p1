@@ -16,7 +16,12 @@ public class ProfileFactory {
                         resultSet.getString("password")
                 );
             } else {
-                return new AdministratorProfile();
+                return new AdministratorProfile(
+                        resultSet.getString("username"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("password")
+                );
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
