@@ -5,6 +5,7 @@ import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordExcep
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeeProfile implements PasswordProtectedProfile {
 
@@ -85,5 +86,24 @@ public class EmployeeProfile implements PasswordProtectedProfile {
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeeProfile that = (EmployeeProfile) o;
+
+
+
+        return isAdministrator == that.isAdministrator && Objects.equals(profileTickets, that.profileTickets)
+                && username.equals(that.username) && firstName.equals(that.firstName)
+                && lastName.equals(that.lastName) && password.equals(that.password)
+                && profileTickets.equals(that.profileTickets);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profileTickets, username, firstName, lastName, password, isAdministrator);
     }
 }

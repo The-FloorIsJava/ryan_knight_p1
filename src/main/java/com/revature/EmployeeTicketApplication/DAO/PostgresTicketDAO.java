@@ -1,13 +1,12 @@
 package com.revature.EmployeeTicketApplication.DAO;
 
 import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
+import com.revature.EmployeeTicketApplication.Models.ProfileFactory;
 import com.revature.EmployeeTicketApplication.Utils.ConnectionFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
-public class PostgressTicketDAO implements PasswordProtectedDB{
+public class PostgresTicketDAO implements PasswordProtectedDB{
 
 
     @Override
@@ -53,7 +52,19 @@ public class PostgressTicketDAO implements PasswordProtectedDB{
 
     @Override
     public PasswordProtectedProfile getProfile(String username, String password) {
-        return null;
+
+        try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
+
+            String query = "Select * from profiles";
+
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            return ProfileFactory.getProfileFromResultSet(rs);
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
