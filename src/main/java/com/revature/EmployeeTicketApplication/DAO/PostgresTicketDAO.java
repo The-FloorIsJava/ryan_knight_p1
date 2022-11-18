@@ -55,10 +55,16 @@ public class PostgresTicketDAO implements PasswordProtectedDB{
 
         try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
-            String query = "Select * from profiles";
+            String query = "Select * from profiles where username=? and password=?;";
 
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(query);
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1,username);
+            preparedStatement.setString(2,password);
+            //preparedStatement.executeUpdate();
+
+            ResultSet rs = preparedStatement.executeQuery();
             return ProfileFactory.getProfileFromResultSet(rs);
 
 
