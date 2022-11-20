@@ -1,5 +1,7 @@
 package com.revature.EmployeeTicketApplication.Models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.sql.Date;
 
@@ -20,8 +22,8 @@ public class Ticket {
     public Ticket(String username, Date submissionDate, double amount) {
 
         this.ticketID = -1;
-        this.ticketStatus = TicketStatus.PENDING;
         this.username = username;
+        this.ticketStatus = TicketStatus.PENDING;
         this.submissionDate = submissionDate;
 
         if (amount < 0 ) {
@@ -37,6 +39,15 @@ public class Ticket {
      * */
     public Ticket(String username, double amount) {
         this(username, null, amount);
+    }
+
+    public Ticket(ResultSet resultSet) throws SQLException {
+
+        this.ticketID = resultSet.getInt("ticket_id");
+        this.username = resultSet.getString("owner");
+        this.amount = resultSet.getDouble("amount");
+        this.submissionDate = resultSet.getDate("submission_date");
+        this.ticketStatus = TicketStatus.valueOf(resultSet.getString("status").toUpperCase());
     }
 
 

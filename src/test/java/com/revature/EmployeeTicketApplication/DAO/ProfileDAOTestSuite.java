@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProfileDAOTestSuite {
 
     // Fields
@@ -92,7 +94,5 @@ public class ProfileDAOTestSuite {
 
 
     }
-
-
 
 }

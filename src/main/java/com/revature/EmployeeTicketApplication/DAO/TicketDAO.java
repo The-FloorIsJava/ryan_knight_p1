@@ -14,14 +14,14 @@ public class TicketDAO implements DAO<Ticket,Integer> {
         try(Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
             // Define sql commands.
-            String sql = "INSERT INTO profiles(username,first_name,last_name,password,admin) " +
-                    "VALUES(?,?,?,?,?)";
+            String sql = "INSERT INTO tickets(owner, amount) " +
+                    "VALUES(?,?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 
-            preparedStatement.setString(2, record.getUsername());
-            preparedStatement.setDouble(3,record.getAmount());
+            preparedStatement.setString(1, record.getUsername());
+            preparedStatement.setDouble(2,record.getAmount());
 
 
             int checkInsert = preparedStatement.executeUpdate();
@@ -49,7 +49,27 @@ public class TicketDAO implements DAO<Ticket,Integer> {
 
     @Override
     public Ticket get(Integer primaryKey) {
-        return null;
+
+        try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()){
+
+            String sql = "SELECT * FROM tickets WHERE ticket_id=?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,primaryKey);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            if (!resultSet.next()) {
+                return null;
+            } else {
+                return new Ticket(resultSet);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
