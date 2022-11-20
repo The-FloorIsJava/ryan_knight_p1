@@ -4,6 +4,7 @@ import com.revature.EmployeeTicketApplication.Models.Ticket;
 import com.revature.EmployeeTicketApplication.Utils.ConnectionFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TicketDAO implements DAO<Ticket,Integer> {
@@ -45,6 +46,18 @@ public class TicketDAO implements DAO<Ticket,Integer> {
     @Override
     public void delete(Ticket record) {
 
+        String sql = "DELETE FROM tickets WHERE ticket_id=?;";
+
+        try(Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,record.getTicketID());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -74,11 +87,52 @@ public class TicketDAO implements DAO<Ticket,Integer> {
 
     @Override
     public Ticket update(Ticket record) {
-        return null;
+
+        String sql = "UPDATE tickets SET owner=?, amount=?, submission_date=?, " +
+                "status=? WHERE ticket_id=?";
+
+        try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
+
+            PreparedStatement preparedStatement =  connection.prepareStatement(sql);
+
+            preparedStatement.setString(1,record.getUsername());
+            preparedStatement.setDouble(2,record.getAmount());
+            preparedStatement.setDate(2,record.getSubmissionDate());
+            preparedStatement.setString(3,record.getTicketStatus().toString().toLowerCase());
+            preparedStatement.setInt(4,record.getTicketID());
+
+            preparedStatement.executeUpdate();
+
+            return get(record.getTicketID());
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
     public List<Ticket> getAll() {
-        return null;
+
+        String sql = "SELECT * FROM tickets;";
+
+        try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Ticket> retArr = new ArrayList<>();
+
+            while (resultSet.next()) {
+                retArr.add(new Ticket(resultSet));
+            }
+
+            return retArr;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

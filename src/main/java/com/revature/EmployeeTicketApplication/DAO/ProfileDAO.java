@@ -115,10 +115,7 @@ public class ProfileDAO implements DAO<PasswordProtectedProfile,String> {
 
             String query = "Select * from profiles;";
 
-
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-
             ResultSet rs = preparedStatement.executeQuery();
 
             return ProfileFactory.getPasswordProtectedProfileListFromResultSet(rs);
