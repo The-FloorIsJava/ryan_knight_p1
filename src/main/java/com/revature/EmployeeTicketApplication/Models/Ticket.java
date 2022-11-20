@@ -1,46 +1,45 @@
 package com.revature.EmployeeTicketApplication.Models;
 
 import java.util.*;
+import java.sql.Date;
 
 public class Ticket {
 
     // Fields
-    private static Map<Integer,Ticket> idMap;
     private final int ticketID;
     private final String username;
-    private final Date submisionDate;
+    private final Date submissionDate;
     private final double amount;
     private TicketStatus ticketStatus;
 
+    /**
+     * @param username of ticket owner.
+     * @param submissionDate date ticket is submitted.
+     * @param amount the amount of the reimbursement.
+     * */
     public Ticket(String username, Date submissionDate, double amount) {
-        // Initialize idMap if not done already.
-        if (Ticket.idMap == null) {
-            Ticket.idMap = new HashMap<>();
-        }
 
-        Random rand = new Random();
-
-        // Create unique ticket id, ensure it is not already in use.
-        int proposedID = rand.nextInt(15);
-        while (Ticket.idMap.containsKey(proposedID)) {
-            proposedID = rand.nextInt(15);
-        }
-
-        this.ticketID = proposedID;
+        this.ticketID = -1;
         this.ticketStatus = TicketStatus.PENDING;
         this.username = username;
-        this.submisionDate = submissionDate;
+        this.submissionDate = submissionDate;
+
+        if (amount < 0 ) {
+            throw new IllegalArgumentException("amount @param must be greater than or equal to 0.");
+        }
+
         this.amount = amount;
 
     }
 
+    /**
+     * Create ticket instance with null Date, where the date is to be defined by default in sql.
+     * */
     public Ticket(String username, double amount) {
-        this(username, new Date(), amount);
+        this(username, null, amount);
     }
 
-    public Ticket(Ticket toBeCopied) {
-        this(toBeCopied.username,new Date(toBeCopied.submisionDate.getDate()),toBeCopied.amount);
-    }
+
 
     public int getTicketID() {
         return ticketID;
@@ -50,12 +49,21 @@ public class Ticket {
         return username;
     }
 
-    public String getSubmisionDate() {
-        return submisionDate.toString();
+    public Date getSubmissionDate() {
+        return submissionDate;
     }
 
     public double getAmount() {
         return amount;
+    }
+
+
+    public TicketStatus getTicketStatus() {
+        return ticketStatus;
+    }
+
+    public void setTicketStatus(TicketStatus ticketStatus) {
+        this.ticketStatus = ticketStatus;
     }
 
     @Override
@@ -66,12 +74,12 @@ public class Ticket {
         return ticketID == ticket.ticketID &&
                 amount == ticket.amount &&
                 username.equals(ticket.username) &&
-                submisionDate.equals(ticket.submisionDate) &&
+                submissionDate.equals(ticket.submissionDate) &&
                 ticketStatus == ticket.ticketStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticketID, username, submisionDate, amount, ticketStatus);
+        return Objects.hash(ticketID, username, submissionDate, amount, ticketStatus);
     }
 }

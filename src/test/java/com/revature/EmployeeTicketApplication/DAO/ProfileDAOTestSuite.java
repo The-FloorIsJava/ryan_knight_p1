@@ -8,12 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
-public class PostgresTicketDAOTestSuite {
+public class ProfileDAOTestSuite {
 
     // Fields
     private PasswordProtectedProfile passwordProtectedProfile;
-    private PostgresTicketDAO postgresTicketDAO;
+    private DAO<PasswordProtectedProfile,String> profileDAO;
     private Connection connectionForDAO;
 
 
@@ -30,7 +31,7 @@ public class PostgresTicketDAOTestSuite {
                 getConnectionFactoryInstance().
                 getConnection();
 
-        postgresTicketDAO = new PostgresTicketDAO();
+        profileDAO = new ProfileDAO();
     }
 
     void tearDown(){
@@ -42,24 +43,37 @@ public class PostgresTicketDAOTestSuite {
     }
 
     @Test
-    void test_addProfile_returnNonNullProfile_givenValidProfile(){
+    void test_save_returnNonNullProfile_givenValidProfile(){
         setup();
-        Assertions.assertNotNull(postgresTicketDAO.addProfile(passwordProtectedProfile));
+        try {
+            Assertions.assertNotNull(profileDAO.save(passwordProtectedProfile));
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new RuntimeException(e);
+        }
         tearDown();
     }
 
     @Test
-    void test_getProfile_equalToLocalInstance_givenIdenticalProfileSuccessfullyFetched() {
+    void test_get_equalToLocalInstance_givenIdenticalProfileSuccessfullyFetched() {
         setup();
         // passwordProtectedProfile field will be used as local instance.
 
-        PasswordProtectedProfile fetchedFromDB = postgresTicketDAO.getProfile(
-                passwordProtectedProfile.getUsername(),
-                passwordProtectedProfile.getPassword()
+        PasswordProtectedProfile fetchedFromDB = profileDAO.get(
+                passwordProtectedProfile.getUsername()
         );
 
 
         Assertions.assertEquals(passwordProtectedProfile,fetchedFromDB);
+
+        tearDown();
+    }
+
+    @Test
+    void test_delete_getReturnsNull_givenRecordSuccessfullyDeleted() {
+        setup();
+
+        profileDAO.delete(passwordProtectedProfile);
+        Assertions.assertNull(profileDAO.get(passwordProtectedProfile.getUsername()));
 
         tearDown();
     }

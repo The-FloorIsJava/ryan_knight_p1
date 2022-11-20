@@ -7,8 +7,13 @@ public class ProfileFactory {
 
     public static PasswordProtectedProfile getProfileFromResultSet(ResultSet resultSet){
         try {
+
+            if (!resultSet.next()) {
+                return null;
+            }
+
             // If admin is false, return employee profile, otherwise return AdministratorProfile.
-            if (resultSet.next() && !resultSet.getBoolean(5)) {
+            if (!resultSet.getBoolean(5)) {
                 return new EmployeeProfile(
                         resultSet.getString("username"),
                         resultSet.getString("first_name"),
