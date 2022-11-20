@@ -53,6 +53,11 @@ public class TicketDAO implements DAO<Ticket,Integer> {
     }
 
     @Override
+    public Ticket update(Ticket record) {
+        return null;
+    }
+
+    @Override
     public List<Ticket> getAll() {
         return null;
     }

@@ -28,6 +28,8 @@ public interface DAO<V,K> {
      * */
     V get(K primaryKey);
 
+    V update(V record);
+
     /**
      * Get all reocrds
      * @return list of all records
