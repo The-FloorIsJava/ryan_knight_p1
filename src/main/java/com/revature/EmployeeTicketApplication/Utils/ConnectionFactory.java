@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Connection factory
+ * */
 public class ConnectionFactory {
 
     // Static fields.
@@ -50,17 +53,16 @@ public class ConnectionFactory {
 
 
     /**
-     *
+     * Get connection.
+     * @return connection
      * */
     public Connection getConnection() {
         try {
-
             return DriverManager.getConnection(properties.getProperty("url"),
                     properties.getProperty("user"),
                     properties.getProperty("password"));
 
-            /*return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres","postgres",
-                    "password");*/
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

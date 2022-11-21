@@ -5,6 +5,9 @@ import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+/**
+ * Interface defines behavior of DAO classes.
+ * */
 public interface DAO<V,K> {
 
     /**
@@ -28,10 +31,15 @@ public interface DAO<V,K> {
      * */
     V get(K primaryKey);
 
+    /**
+     * Update record in database.
+     * @param record to be updated.
+     * @return updated record.
+     * */
     V update(V record);
 
     /**
-     * Get all reocrds
+     * Get all records
      * @return list of all records
      */
     List<V> getAll();
