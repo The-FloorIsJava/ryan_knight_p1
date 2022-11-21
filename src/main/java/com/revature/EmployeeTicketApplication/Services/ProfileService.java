@@ -29,4 +29,21 @@ public class ProfileService {
         }
     }
 
+    public boolean login(String username, String password) {
+
+        PasswordProtectedProfile passwordProtectedProfile = profileStringDAO.get(username);
+
+        if (passwordProtectedProfile ==null) {
+            return false;
+        } else if (passwordProtectedProfile.getPassword().equals(password)) {
+            // If profile exists, confirm password and administrator status match.
+            authorizedAccount = passwordProtectedProfile;
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+
 }

@@ -26,6 +26,7 @@ public class ApplicationController {
 
         app.post("registerEmployee",this::registerEmployee);
         app.post("registerAdministrator",this::registerAdministrator);
+        app.post("login",this::login);
 
     }
 
@@ -50,6 +51,19 @@ public class ApplicationController {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void login(Context context) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String[] credentials = mapper.readValue(context.body(),String[].class);
+            profileService.login(credentials[0],credentials[1]);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
     }
 
 }
