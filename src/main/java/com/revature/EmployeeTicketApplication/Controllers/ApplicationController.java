@@ -1,12 +1,12 @@
 package com.revature.EmployeeTicketApplication.Controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.EmployeeTicketApplication.DAO.ProfileDAO;
 import com.revature.EmployeeTicketApplication.Models.AdministratorProfile;
 import com.revature.EmployeeTicketApplication.Models.EmployeeProfile;
 import com.revature.EmployeeTicketApplication.Services.ProfileService;
+import com.revature.EmployeeTicketApplication.Utils.Credentials;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -24,18 +24,28 @@ public class ApplicationController {
 
     public void run() {
 
+        // Post handlers
         app.post("registerEmployee",this::registerEmployee);
         app.post("registerAdministrator",this::registerAdministrator);
         app.post("login",this::login);
 
+        // Get handlers
+
+
     }
 
+    /**
+     * Registers employee by adding their profile to the database.
+     * Once employee has been registered automatically logs them in.
+     * @param context object.
+     * */
     private void registerEmployee(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         try {
 
             EmployeeProfile employeeProfile = mapper.readValue(context.body(),EmployeeProfile.class);
             profileService.register(employeeProfile);
+            profileService.login(employeeProfile.getUsername(),employeeProfile.getPassword());
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -43,6 +53,11 @@ public class ApplicationController {
 
     }
 
+    /**
+     * Registers administrator by adding their profile to the database.
+     * Once administrator has been registered automatically logs them in.
+     * @param context object.
+     * */
     private void registerAdministrator(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -53,16 +68,25 @@ public class ApplicationController {
         }
     }
 
+    /**
+     *
+     * */
     private void login(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            String[] credentials = mapper.readValue(context.body(),String[].class);
-            profileService.login(credentials[0],credentials[1]);
+
+            Credentials credentials = mapper.readValue(context.body(), Credentials.class);
+            profileService.login(credentials.username(),credentials.password());
+
+            if (profileService.getAuthorizedAccount()!=null) {
+                context.json("Logged in as " + profileService.getAuthorizedAccount().getUsername());
+            } else {
+                context.json("Bad credentials, no account exists with given username and password.");
+            }
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-
 
     }
 

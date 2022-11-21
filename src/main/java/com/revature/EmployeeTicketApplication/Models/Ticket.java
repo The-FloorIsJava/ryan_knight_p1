@@ -36,11 +36,17 @@ public class Ticket {
 
     /**
      * Create ticket instance with null Date, where the date is to be defined by default in sql.
+     * @param username of owner account.
+     * @param amount associated with ticket.
      * */
     public Ticket(String username, double amount) {
         this(username, null, amount);
     }
 
+    /**
+     * Create ticket from ResultSet.
+     * @param resultSet used to instantiate Ticket.
+     * */
     public Ticket(ResultSet resultSet) throws SQLException {
 
         this.ticketID = resultSet.getInt("ticket_id");
@@ -51,7 +57,7 @@ public class Ticket {
     }
 
 
-
+    /***/
     public int getTicketID() {
         return ticketID;
     }

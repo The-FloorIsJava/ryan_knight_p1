@@ -70,5 +70,9 @@ public class ProfileService {
 
     }
 
+    public PasswordProtectedProfile getAuthorizedAccount() {
+        return authorizedAccount;
+    }
+
 
 }
