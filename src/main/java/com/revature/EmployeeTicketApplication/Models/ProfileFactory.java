@@ -58,6 +58,13 @@ public class ProfileFactory {
 
     }
 
+    public static PasswordProtectedProfile getPasswordProtectedProfile(String username, String firstName,
+                                                         String lastName, String password, boolean isAdmin) {
+        return isAdmin? (new AdministratorProfile(username,firstName,lastName,password)):
+                (new EmployeeProfile(username,firstName,lastName,password));
+
+    }
+
 
 
 }

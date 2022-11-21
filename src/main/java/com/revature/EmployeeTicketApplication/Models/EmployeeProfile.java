@@ -3,6 +3,7 @@ package com.revature.EmployeeTicketApplication.Models;
 import com.revature.EmployeeTicketApplication.AccountExceptions.AccountDoesNotExistException;
 import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordException;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -10,13 +11,17 @@ import java.util.Objects;
 public class EmployeeProfile implements PasswordProtectedProfile {
 
     private final List<Ticket> profileTickets;
-    private final String username;
+    private String username;
 
     private String firstName;
     private String lastName;
     private String password;
     private final boolean isAdministrator;
 
+    public EmployeeProfile(){
+        profileTickets = new ArrayList<>();
+        this.isAdministrator = false;
+    }
 
     public EmployeeProfile(String username, String firstName,String lastName,
                            String password) {
