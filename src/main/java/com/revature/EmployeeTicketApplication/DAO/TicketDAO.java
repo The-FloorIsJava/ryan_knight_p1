@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketDAO implements DAOChildTable<Ticket,Integer, PasswordProtectedProfile> {
+public class TicketDAO implements DAO<Ticket,Integer> {
     @Override
     public Ticket save(Ticket record) throws SQLIntegrityConstraintViolationException {
 
@@ -138,7 +138,29 @@ public class TicketDAO implements DAOChildTable<Ticket,Integer, PasswordProtecte
     }
 
     @Override
-    public Ticket[] getAll(PasswordProtectedProfile foreignKey) {
-        return new Ticket[0];
+    public List<Ticket> getAllWhere(String field,String constraint) {
+        String sql = "SELECT * FROM tickets WHERE ?=?";
+        List<Ticket> retList = new ArrayList<>();
+
+        try(Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,field);
+            preparedStatement.setString(2,constraint);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                retList.add(new Ticket(resultSet));
+            }
+
+            return retList;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
+
+
 }

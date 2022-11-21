@@ -3,11 +3,15 @@ package com.revature.EmployeeTicketApplication.Controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.EmployeeTicketApplication.DAO.ProfileDAO;
+import com.revature.EmployeeTicketApplication.DAO.TicketDAO;
 import com.revature.EmployeeTicketApplication.Models.AdministratorProfile;
 import com.revature.EmployeeTicketApplication.Models.EmployeeProfile;
 import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
+import com.revature.EmployeeTicketApplication.Models.Ticket;
 import com.revature.EmployeeTicketApplication.Services.ProfileService;
+import com.revature.EmployeeTicketApplication.Services.TicketService;
 import com.revature.EmployeeTicketApplication.Utils.Credentials;
+import com.revature.EmployeeTicketApplication.Utils.TicketRecord;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -16,12 +20,14 @@ import java.sql.ResultSet;
 
 public class ApplicationController {
 
-    Javalin app;
-    ProfileService profileService;
+    private final Javalin app;
+    private final ProfileService profileService;
+    private final TicketService ticketService;
 
     public ApplicationController(Javalin javalinApp) {
 
         profileService = new ProfileService(new ProfileDAO());
+        ticketService = new TicketService(new TicketDAO());
         app = javalinApp;
 
     }
@@ -32,6 +38,7 @@ public class ApplicationController {
         app.post("registerEmployee",this::registerEmployee);
         app.post("registerAdministrator",this::registerAdministrator);
         app.post("login",this::login);
+        app.post("submitTicket",this::submitTicket);
 
         // Get handlers
 
@@ -113,6 +120,35 @@ public class ApplicationController {
             profileService.logout();
         } else {
             context.json("There is no one to logout.");
+        }
+
+    }
+
+    private void submitTicket(Context context) {
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Get amount from posted json content.
+        double amount;
+        try {
+            amount = mapper.readValue(context.body(), TicketRecord.class).amount();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Ensure user is logged in.
+        if (profileService.getAuthorizedAccount()==null) {
+            context.json("Login to submit ticket.");
+        }
+        //  Ensure amount is not less than or equal to 0.
+        else if (amount <= 0) {
+            context.json("Invalid ticket amount, must be greater than 0.");
+        }
+        // Submit ticket for authorized account.
+        else {
+            Ticket ticket = new Ticket(profileService.getAuthorizedAccount().getUsername(), amount);
+            ticketService.enterTicket(ticket);
+            context.json("Ticket submitted for " + amount);
         }
 
     }

@@ -129,4 +129,9 @@ public class ProfileDAO implements DAO<PasswordProtectedProfile,String> {
         }
     }
 
+    @Override
+    public List<PasswordProtectedProfile> getAllWhere(String filed, String constraint) {
+        return null;
+    }
+
 }

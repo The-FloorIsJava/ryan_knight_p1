@@ -44,5 +44,7 @@ public interface DAO<V,K> {
      */
     List<V> getAll();
 
+    List<V> getAllWhere(String filed,String constraint);
+
 
 }
