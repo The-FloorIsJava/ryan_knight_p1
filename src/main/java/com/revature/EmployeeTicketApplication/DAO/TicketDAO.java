@@ -1,5 +1,6 @@
 package com.revature.EmployeeTicketApplication.DAO;
 
+import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
 import com.revature.EmployeeTicketApplication.Models.Ticket;
 import com.revature.EmployeeTicketApplication.Utils.ConnectionFactory;
 
@@ -7,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketDAO implements DAO<Ticket,Integer> {
+public class TicketDAO implements DAOChildTable<Ticket,Integer, PasswordProtectedProfile> {
     @Override
     public Ticket save(Ticket record) throws SQLIntegrityConstraintViolationException {
 
@@ -134,5 +135,10 @@ public class TicketDAO implements DAO<Ticket,Integer> {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public Ticket[] getAll(PasswordProtectedProfile foreignKey) {
+        return new Ticket[0];
     }
 }

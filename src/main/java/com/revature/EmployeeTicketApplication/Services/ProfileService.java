@@ -70,6 +70,11 @@ public class ProfileService {
 
     }
 
+
+    public void logout() {
+        authorizedAccount = null;
+    }
+
     public PasswordProtectedProfile getAuthorizedAccount() {
         return authorizedAccount;
     }

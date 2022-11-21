@@ -35,6 +35,9 @@ public class ApplicationController {
 
         // Get handlers
 
+        // delete handlers
+        app.delete("logout",this::logout);
+
 
     }
 
@@ -74,7 +77,7 @@ public class ApplicationController {
 
         if (profileService.register(passwordProtectedProfile)) {
             profileService.login(passwordProtectedProfile.getUsername(), passwordProtectedProfile.getPassword());
-            context.json("Profile successfully created, now loged in as " + passwordProtectedProfile.getUsername());
+            context.json("Profile successfully created, now logged in as " + passwordProtectedProfile.getUsername());
         } else {
             context.json("Profile associated with username \"" + passwordProtectedProfile.getUsername()
             + "\" already exists.");
@@ -99,6 +102,17 @@ public class ApplicationController {
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    private void logout(Context context) {
+
+        if (profileService.getAuthorizedAccount() != null) {
+            context.json("Logging out " + profileService.getAuthorizedAccount().getUsername());
+            profileService.logout();
+        } else {
+            context.json("There is no one to logout.");
         }
 
     }
