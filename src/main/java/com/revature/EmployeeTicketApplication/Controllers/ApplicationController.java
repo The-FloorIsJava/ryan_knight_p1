@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.EmployeeTicketApplication.DAO.ProfileDAO;
 import com.revature.EmployeeTicketApplication.Models.AdministratorProfile;
 import com.revature.EmployeeTicketApplication.Models.EmployeeProfile;
+import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
 import com.revature.EmployeeTicketApplication.Services.ProfileService;
 import com.revature.EmployeeTicketApplication.Utils.Credentials;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 
 public class ApplicationController {
 
@@ -42,11 +46,7 @@ public class ApplicationController {
     private void registerEmployee(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-
-            EmployeeProfile employeeProfile = mapper.readValue(context.body(),EmployeeProfile.class);
-            profileService.register(employeeProfile);
-            profileService.login(employeeProfile.getUsername(),employeeProfile.getPassword());
-
+            register(context,mapper.readValue(context.body(),EmployeeProfile.class));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -61,10 +61,23 @@ public class ApplicationController {
     private void registerAdministrator(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            AdministratorProfile administratorProfile = mapper.readValue(context.body(),AdministratorProfile.class);
-            profileService.register(administratorProfile);
+            register(context,mapper.readValue(context.body(),AdministratorProfile.class));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Register account.
+     * */
+    private void register(Context context, PasswordProtectedProfile passwordProtectedProfile) {
+
+        if (profileService.register(passwordProtectedProfile)) {
+            profileService.login(passwordProtectedProfile.getUsername(), passwordProtectedProfile.getPassword());
+            context.json("Profile successfully created, now loged in as " + passwordProtectedProfile.getUsername());
+        } else {
+            context.json("Profile associated with username \"" + passwordProtectedProfile.getUsername()
+            + "\" already exists.");
         }
     }
 
