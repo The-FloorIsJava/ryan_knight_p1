@@ -100,4 +100,15 @@ public class Ticket {
     public int hashCode() {
         return Objects.hash(ticketID, username, submissionDate, amount, ticketStatus);
     }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "ticketID=" + ticketID +
+                ", username='" + username + '\'' +
+                ", submissionDate=" + submissionDate +
+                ", amount=" + amount +
+                ", ticketStatus=" + ticketStatus +
+                '}';
+    }
 }

@@ -23,11 +23,12 @@ public class ApplicationController {
     private final ProfileService profileService;
     private final TicketService ticketService;
 
-    public ApplicationController(Javalin javalinApp) {
+    public ApplicationController(Javalin javalin, ProfileService profileService,
+                                 TicketService ticketService) {
 
-        profileService = new ProfileService(new ProfileDAO());
-        ticketService = new TicketService(new TicketDAO());
-        app = javalinApp;
+        this.profileService = profileService;
+        this.ticketService = ticketService;
+        app = javalin;
 
     }
 
@@ -204,7 +205,6 @@ public class ApplicationController {
                 throw new RuntimeException(e);
             }
 
-            System.out.println(updateTicket.status());
 
             ticketService.updateTicketStatus(updateTicket.ticket_id(),
                     TicketStatus.valueOf(updateTicket.status().toUpperCase()));
