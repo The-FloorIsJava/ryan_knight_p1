@@ -62,7 +62,7 @@ public class ProfileDAO implements DAO<PasswordProtectedProfile,String> {
     public PasswordProtectedProfile get(String primaryKey) {
         try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
-            String query = "Select * from profiles where username=?;";
+            String query = "SELECT * FROM profiles WHERE username=?;";
 
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -113,7 +113,7 @@ public class ProfileDAO implements DAO<PasswordProtectedProfile,String> {
     public List<PasswordProtectedProfile> getAll() {
         try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
-            String query = "Select * from profiles;";
+            String query = "SELECT * FROM profiles;";
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
@@ -129,9 +129,7 @@ public class ProfileDAO implements DAO<PasswordProtectedProfile,String> {
         }
     }
 
-    @Override
-    public List<PasswordProtectedProfile> getAllWhere(String filed, String constraint) {
-        return null;
-    }
+
+
 
 }

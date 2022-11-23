@@ -50,11 +50,12 @@ public class Ticket {
     public Ticket(ResultSet resultSet) throws SQLException {
 
         this.ticketID = resultSet.getInt("ticket_id");
-        this.username = resultSet.getString("owner");
-        this.amount = resultSet.getDouble("amount");
+        this.username = resultSet.getString("username");
         this.submissionDate = resultSet.getDate("submission_date");
+        this.amount = resultSet.getDouble("amount");
         this.ticketStatus = TicketStatus.valueOf(resultSet.getString("status").toUpperCase());
     }
+
 
 
     /***/

@@ -1,15 +1,17 @@
 package com.revature.EmployeeTicketApplication.Services;
 
-import com.revature.EmployeeTicketApplication.DAO.DAO;
+import com.revature.EmployeeTicketApplication.DAO.TicketDAO;
 import com.revature.EmployeeTicketApplication.Models.Ticket;
+import com.revature.EmployeeTicketApplication.Models.TicketStatus;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 public class TicketService {
 
-    DAO<Ticket,Integer> ticketIntegerDAO;
+    TicketDAO ticketIntegerDAO;
 
-    public TicketService(DAO<Ticket,Integer> ticketIntegerDAO) {
+    public TicketService(TicketDAO ticketIntegerDAO) {
         this.ticketIntegerDAO = ticketIntegerDAO;
     }
 
@@ -19,6 +21,19 @@ public class TicketService {
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Ticket> getAllPending() {
+        return ticketIntegerDAO.getAllConstraintStatus(TicketStatus.PENDING.toString());
+    }
+
+    public List<Ticket> getProfileTickets(String username) {
+        return ticketIntegerDAO.getAllConstraintUsername(username);
+    }
+
+
+    public Ticket getTicketByID(int id) {
+        return ticketIntegerDAO.get(id);
     }
 
 }

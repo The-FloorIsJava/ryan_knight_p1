@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class AdministratorProfile extends EmployeeProfile{
 
     public AdministratorProfile() {
-
+        super.isAdministrator = true;
     }
     public AdministratorProfile(String username, String firstName, String lastName, String password) {
         super(username, firstName, lastName, password, true);

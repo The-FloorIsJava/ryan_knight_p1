@@ -70,7 +70,4 @@ public class TicketDAOTestSuite {
 
         Assertions.assertNotNull(fetchedFromDB);
     }
-
-
-
 }

@@ -1,6 +1,5 @@
 package com.revature.EmployeeTicketApplication.DAO;
 
-import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
 import com.revature.EmployeeTicketApplication.Models.Ticket;
 import com.revature.EmployeeTicketApplication.Utils.ConnectionFactory;
 
@@ -16,7 +15,7 @@ public class TicketDAO implements DAO<Ticket,Integer> {
         try(Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
             // Define sql commands.
-            String sql = "INSERT INTO tickets(owner, amount) " +
+            String sql = "INSERT INTO tickets(username, amount) " +
                     "VALUES(?,?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -89,7 +88,7 @@ public class TicketDAO implements DAO<Ticket,Integer> {
     @Override
     public Ticket update(Ticket record) {
 
-        String sql = "UPDATE tickets SET owner=?, amount=?, submission_date=?, " +
+        String sql = "UPDATE tickets SET username=?, amount=?, submission_date=?, " +
                 "status=? WHERE ticket_id=?";
 
         try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
@@ -137,18 +136,52 @@ public class TicketDAO implements DAO<Ticket,Integer> {
 
     }
 
-    @Override
-    public List<Ticket> getAllWhere(String field,String constraint) {
-        String sql = "SELECT * FROM tickets WHERE ?=?";
+
+
+    public List<Ticket> getAllConstraintStatus(String constraint) {
+        String sql = "SELECT * FROM tickets WHERE status=?::\"ticket_status\";";
         List<Ticket> retList = new ArrayList<>();
 
         try(Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,field);
-            preparedStatement.setString(2,constraint);
+            preparedStatement.setString(1,constraint);
+
+
 
             ResultSet resultSet = preparedStatement.executeQuery();
+
+
+
+            System.out.println(retList);
+
+            while (resultSet.next()) {
+                retList.add(new Ticket(resultSet));
+            }
+
+            System.out.println(retList);
+
+            return retList;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    public List<Ticket> getAllConstraintUsername(String constraint) {
+        String sql = "SELECT * FROM tickets WHERE username=?;";
+        List<Ticket> retList = new ArrayList<>();
+
+        try(Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,constraint);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            System.out.println(retList);
 
             while (resultSet.next()) {
                 retList.add(new Ticket(resultSet));

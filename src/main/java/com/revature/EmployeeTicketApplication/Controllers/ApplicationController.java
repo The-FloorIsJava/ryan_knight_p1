@@ -17,6 +17,7 @@ import io.javalin.http.Context;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.List;
 
 public class ApplicationController {
 
@@ -41,10 +42,12 @@ public class ApplicationController {
         app.post("submitTicket",this::submitTicket);
 
         // Get handlers
+        app.get("pendingTickets",this::getAllPending);
+        app.get("getMyTickets",this::getTicketsAssociatedWithProfile);
+        app.get("getTicket",this::getTicketByID);
 
         // delete handlers
         app.delete("logout",this::logout);
-
 
     }
 
@@ -150,6 +153,38 @@ public class ApplicationController {
             ticketService.enterTicket(ticket);
             context.json("Ticket submitted for " + amount);
         }
+
+    }
+
+    private void getAllPending(Context context) {
+
+        // Confirm someone is logged in.
+        if (profileService.getAuthorizedAccount()==null) {
+            context.json("Login in as administrator to view pending tickets");
+        } else if (!profileService.getAuthorizedAccount().isAdministrator()) {
+            context.json("You are not an administrator, you are not permitted to view other people's tickets!");
+        } else {
+            List<Ticket> ticketList = ticketService.getAllPending();
+            System.out.println(ticketList);
+            context.json(ticketList);
+        }
+    }
+
+    private void getTicketsAssociatedWithProfile(Context context) {
+
+        if (profileService.getAuthorizedAccount()==null) {
+            context.json("Login to view your tickets.");
+        } else {
+            List<Ticket> ticketList = ticketService.getProfileTickets(
+                    profileService.getAuthorizedAccount().getUsername());
+            context.json(ticketList);
+        }
+
+    }
+
+    private void getTicketByID (Context context) {
+
+        context.json(ticketService.getTicketByID(1));
 
     }
 

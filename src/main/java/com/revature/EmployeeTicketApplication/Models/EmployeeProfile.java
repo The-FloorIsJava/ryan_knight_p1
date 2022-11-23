@@ -16,7 +16,7 @@ public class EmployeeProfile implements PasswordProtectedProfile {
     private String firstName;
     private String lastName;
     private String password;
-    private final boolean isAdministrator;
+    protected boolean isAdministrator;
 
     public EmployeeProfile(){
         profileTickets = new ArrayList<>();
@@ -74,6 +74,11 @@ public class EmployeeProfile implements PasswordProtectedProfile {
         return isAdministrator;
     }
 
+    public void setIsAdministrator(boolean isAdministrator) {
+        this.isAdministrator = isAdministrator;
+    }
+
+
     @Override
     public String getUsername() {
         return username;
@@ -120,6 +125,7 @@ public class EmployeeProfile implements PasswordProtectedProfile {
     public int hashCode() {
         return Objects.hash(profileTickets, username, firstName, lastName, password, isAdministrator);
     }
+
 
 
 }

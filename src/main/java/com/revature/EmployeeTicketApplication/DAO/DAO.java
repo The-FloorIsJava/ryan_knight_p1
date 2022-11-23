@@ -43,8 +43,4 @@ public interface DAO<V,K> {
      * @return list of all records
      */
     List<V> getAll();
-
-    List<V> getAllWhere(String filed,String constraint);
-
-
 }
