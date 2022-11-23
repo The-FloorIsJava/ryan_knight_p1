@@ -36,4 +36,18 @@ public class TicketService {
         return ticketIntegerDAO.get(id);
     }
 
+    public boolean updateTicketStatus(int ticket_id, TicketStatus ticketStatus) {
+
+        Ticket ticketToUpdate = ticketIntegerDAO.get(ticket_id);
+
+        if (ticketToUpdate!=null) {
+            ticketToUpdate.setTicketStatus(ticketStatus);
+            ticketIntegerDAO.update(ticketToUpdate);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 }

@@ -89,7 +89,7 @@ public class TicketDAO implements DAO<Ticket,Integer> {
     public Ticket update(Ticket record) {
 
         String sql = "UPDATE tickets SET username=?, amount=?, submission_date=?, " +
-                "status=? WHERE ticket_id=?";
+                "status=?::\"ticket_status\" WHERE ticket_id=?";
 
         try (Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
@@ -97,9 +97,9 @@ public class TicketDAO implements DAO<Ticket,Integer> {
 
             preparedStatement.setString(1,record.getUsername());
             preparedStatement.setDouble(2,record.getAmount());
-            preparedStatement.setDate(2,record.getSubmissionDate());
-            preparedStatement.setString(3,record.getTicketStatus().toString().toLowerCase());
-            preparedStatement.setInt(4,record.getTicketID());
+            preparedStatement.setDate(3,record.getSubmissionDate());
+            preparedStatement.setString(4,record.getTicketStatus().toString().toLowerCase());
+            preparedStatement.setInt(5,record.getTicketID());
 
             preparedStatement.executeUpdate();
 

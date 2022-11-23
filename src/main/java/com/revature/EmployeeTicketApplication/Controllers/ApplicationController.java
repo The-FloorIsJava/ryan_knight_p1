@@ -4,14 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.EmployeeTicketApplication.DAO.ProfileDAO;
 import com.revature.EmployeeTicketApplication.DAO.TicketDAO;
-import com.revature.EmployeeTicketApplication.Models.AdministratorProfile;
-import com.revature.EmployeeTicketApplication.Models.EmployeeProfile;
-import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
-import com.revature.EmployeeTicketApplication.Models.Ticket;
+import com.revature.EmployeeTicketApplication.Models.*;
 import com.revature.EmployeeTicketApplication.Services.ProfileService;
 import com.revature.EmployeeTicketApplication.Services.TicketService;
 import com.revature.EmployeeTicketApplication.Utils.Credentials;
 import com.revature.EmployeeTicketApplication.Utils.TicketRecord;
+import com.revature.EmployeeTicketApplication.Utils.UpdateTicket;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -40,6 +38,7 @@ public class ApplicationController {
         app.post("registerAdministrator",this::registerAdministrator);
         app.post("login",this::login);
         app.post("submitTicket",this::submitTicket);
+        app.post("updateTicket",this::updateTicketStatus);
 
         // Get handlers
         app.get("pendingTickets",this::getAllPending);
@@ -186,6 +185,31 @@ public class ApplicationController {
 
         context.json(ticketService.getTicketByID(1));
 
+    }
+
+
+    private void updateTicketStatus(Context context) {
+
+        if (profileService.getAuthorizedAccount()==null) {
+            context.json("Login as administrator to update ticket.");
+        } else if (!profileService.getAuthorizedAccount().isAdministrator()) {
+            context.json("Must be administrator to update tickets.");
+        } else {
+            ObjectMapper mapper = new ObjectMapper();
+            UpdateTicket updateTicket;
+
+            try {
+                updateTicket = mapper.readValue(context.body(),UpdateTicket.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            System.out.println(updateTicket.status());
+
+            ticketService.updateTicketStatus(updateTicket.ticket_id(),
+                    TicketStatus.valueOf(updateTicket.status().toUpperCase()));
+            context.json("Ticket successfully updated.");
+        }
     }
 
 }

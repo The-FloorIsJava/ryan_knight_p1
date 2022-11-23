@@ -6,7 +6,7 @@ package com.revature.EmployeeTicketApplication.Models;
 public enum TicketStatus {
     PENDING("pending"),
     APPROVED("approved"),
-    DENIED("denied");
+    DECLINED("declined");
 
     private String status;
 
