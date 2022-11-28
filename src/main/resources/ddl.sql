@@ -1,4 +1,4 @@
-create table profiles (
+create table if not exists profiles (
     username varchar(50) primary key,
     first_name varchar(50) not null,
     last_name varchar(50) not null,
@@ -6,11 +6,12 @@ create table profiles (
     admin bool default false
 );
 
-create type ticket_status as enum('pending','declined','approved');
+create type if not exists ticket_status as enum('pending','declined','approved');
 
-create table tickets (
+create table if not exists tickets (
 	ticket_id serial primary key,
-	owner varchar(50) references profiles(username),
+	username varchar(50) not null,
+	foreign key(username) references profiles(username),
 	amount numeric not null default 0,
 	submission_date date not null default current_date,
 	status ticket_status not null default 'pending'
