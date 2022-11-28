@@ -187,7 +187,8 @@ public class ApplicationController {
         } else {
             List<Ticket> ticketList = ticketService.getProfileTickets(
                     profileService.getAuthorizedAccount().getUsername());
-            context.json(ticketList);
+            List<TicketToJsonRecord> jsonList = fromTicketListToTicketToJsonRecordList(ticketList);
+            context.json(jsonList);
         }
 
     }
