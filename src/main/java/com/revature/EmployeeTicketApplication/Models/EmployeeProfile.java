@@ -84,8 +84,8 @@ public class EmployeeProfile implements PasswordProtectedProfile {
         return username;
     }
 
-    public void addTicket(double balance) {
-        profileTickets.add(new Ticket(username,balance));
+    public void addTicket(String description, double balance) {
+        profileTickets.add(new Ticket(username,description,balance));
     }
 
     public String getFirstName() {

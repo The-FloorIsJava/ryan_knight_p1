@@ -15,14 +15,15 @@ public class TicketDAO implements DAO<Ticket,Integer> {
         try(Connection connection = ConnectionFactory.getConnectionFactoryInstance().getConnection()) {
 
             // Define sql commands.
-            String sql = "INSERT INTO tickets(username, amount) " +
-                    "VALUES(?,?)";
+            String sql = "INSERT INTO tickets(username, description, amount) " +
+                    "VALUES(?,?,?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 
             preparedStatement.setString(1, record.getUsername());
-            preparedStatement.setDouble(2,record.getAmount());
+            preparedStatement.setString(2,record.getDescription());
+            preparedStatement.setDouble(3,record.getAmount());
 
 
             int checkInsert = preparedStatement.executeUpdate();

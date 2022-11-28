@@ -1,5 +1,5 @@
 package com.revature.EmployeeTicketApplication.Utils;
 
-public record TicketRecord(double amount) {
+public record TicketRecord(String description, double amount) {
 
 }

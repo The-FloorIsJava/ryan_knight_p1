@@ -135,8 +135,10 @@ public class ApplicationController {
 
         // Get amount from posted json content.
         double amount;
+        String description;
         try {
             amount = mapper.readValue(context.body(), TicketRecord.class).amount();
+            description = mapper.readValue(context.body(),TicketRecord.class).description();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -151,7 +153,7 @@ public class ApplicationController {
         }
         // Submit ticket for authorized account.
         else {
-            Ticket ticket = new Ticket(profileService.getAuthorizedAccount().getUsername(), amount);
+            Ticket ticket = new Ticket(profileService.getAuthorizedAccount().getUsername(),description,amount);
             ticketService.enterTicket(ticket);
             context.json("Ticket submitted for " + amount);
         }

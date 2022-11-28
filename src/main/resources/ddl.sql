@@ -12,6 +12,7 @@ create table if not exists tickets (
 	ticket_id serial primary key,
 	username varchar(50) not null,
 	foreign key(username) references profiles(username),
+	description varchar(250) not null,
 	amount numeric not null default 0,
 	submission_date date not null default current_date,
 	status ticket_status not null default 'pending'

@@ -12,6 +12,7 @@ public class Ticket {
     private final String username;
     private final Date submissionDate;
     private final double amount;
+    private final String description;
     private TicketStatus ticketStatus;
 
     /**
@@ -19,12 +20,13 @@ public class Ticket {
      * @param submissionDate date ticket is submitted.
      * @param amount the amount of the reimbursement.
      * */
-    public Ticket(String username, Date submissionDate, double amount) {
+    public Ticket(String username, Date submissionDate, String description, double amount) {
 
         this.ticketID = -1;
         this.username = username;
         this.ticketStatus = TicketStatus.PENDING;
         this.submissionDate = submissionDate;
+        this.description = description;
 
         if (amount < 0 ) {
             throw new IllegalArgumentException("amount @param must be greater than or equal to 0.");
@@ -39,8 +41,9 @@ public class Ticket {
      * @param username of owner account.
      * @param amount associated with ticket.
      * */
-    public Ticket(String username, double amount) {
-        this(username, null, amount);
+    public Ticket(String username, String description, double amount) {
+        this(username,null,
+                description, amount);
     }
 
     /**
@@ -52,6 +55,7 @@ public class Ticket {
         this.ticketID = resultSet.getInt("ticket_id");
         this.username = resultSet.getString("username");
         this.submissionDate = resultSet.getDate("submission_date");
+        this.description = resultSet.getString("description");
         this.amount = resultSet.getDouble("amount");
         this.ticketStatus = TicketStatus.valueOf(resultSet.getString("status").toUpperCase());
     }
@@ -82,6 +86,10 @@ public class Ticket {
 
     public void setTicketStatus(TicketStatus ticketStatus) {
         this.ticketStatus = ticketStatus;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override

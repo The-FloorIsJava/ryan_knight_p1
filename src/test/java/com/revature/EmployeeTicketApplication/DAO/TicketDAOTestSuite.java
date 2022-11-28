@@ -36,7 +36,7 @@ public class TicketDAOTestSuite {
                 getConnectionFactoryInstance().
                 getConnection();
 
-        ticket = new Ticket(ticketOwner.getUsername(), 10.0);
+        ticket = new Ticket(ticketOwner.getUsername(), "French fries",10.0);
     }
 
     @AfterEach
