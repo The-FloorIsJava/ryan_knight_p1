@@ -153,14 +153,9 @@ public class TicketDAO implements DAO<Ticket,Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
-
-            System.out.println(retList);
-
             while (resultSet.next()) {
                 retList.add(new Ticket(resultSet));
             }
-
-            System.out.println(retList);
 
             return retList;
 
@@ -181,8 +176,6 @@ public class TicketDAO implements DAO<Ticket,Integer> {
             preparedStatement.setString(1,constraint);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-
-            System.out.println(retList);
 
             while (resultSet.next()) {
                 retList.add(new Ticket(resultSet));
