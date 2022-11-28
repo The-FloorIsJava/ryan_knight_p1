@@ -216,10 +216,14 @@ public class ApplicationController {
                 throw new RuntimeException(e);
             }
 
-
-            ticketService.updateTicketStatus(updateTicket.ticket_id(),
-                    TicketStatus.valueOf(updateTicket.status().toUpperCase()));
-            context.json("Ticket successfully updated.");
+            // Prohibit ticket from being updated if it has already been processed.
+            if (ticketService.getTicketByID(updateTicket.ticket_id()).getTicketStatus()!= TicketStatus.PENDING) {
+                context.json("Ticket already processed.");
+            } else {
+                ticketService.updateTicketStatus(updateTicket.ticket_id(),
+                        TicketStatus.valueOf(updateTicket.status().toUpperCase()));
+                context.json("Ticket successfully updated.");
+            }
         }
     }
 
