@@ -151,6 +151,10 @@ public class ApplicationController {
         else if (amount <= 0) {
             context.json("Invalid ticket amount, must be greater than 0.");
         }
+        // Ensure valid description is used.
+        else if (description == null || description.length() == 0) {
+            context.json("Ticket submission must include valid description.");
+        }
         // Submit ticket for authorized account.
         else {
             Ticket ticket = new Ticket(profileService.getAuthorizedAccount().getUsername(),description,amount);
@@ -170,17 +174,7 @@ public class ApplicationController {
         } else {
             List<Ticket> ticketList = ticketService.getAllPending();
 
-            List<TicketToJsonRecord> jsonList = new ArrayList<>();
-
-            for (Ticket ticket : ticketList) {
-                jsonList.add(new TicketToJsonRecord(
-                        ticket.getTicketID(),
-                        ticket.getUsername(),
-                        ticket.getSubmissionDate().toString(),
-                        Double.toString(ticket.getAmount()),
-                        ticket.getTicketStatus().toString()
-                ));
-            }
+            List<TicketToJsonRecord> jsonList = fromTicketListToTicketToJsonRecordList(ticketList);
 
             context.json(jsonList);
         }
@@ -226,6 +220,24 @@ public class ApplicationController {
                     TicketStatus.valueOf(updateTicket.status().toUpperCase()));
             context.json("Ticket successfully updated.");
         }
+    }
+
+    /**
+     * Get list of TicketToJsonRecords from list of tickets, so that the dates are legible in Postman
+     * */
+    private List<TicketToJsonRecord> fromTicketListToTicketToJsonRecordList(List<Ticket> ticketList) {
+        List<TicketToJsonRecord> jsonList = new ArrayList<>();
+
+        for (Ticket ticket : ticketList) {
+            jsonList.add(new TicketToJsonRecord(
+                    ticket.getTicketID(),
+                    ticket.getUsername(),
+                    ticket.getSubmissionDate().toString(),
+                    Double.toString(ticket.getAmount()),
+                    ticket.getTicketStatus().toString()
+            ));
+        }
+        return jsonList;
     }
 
 }
