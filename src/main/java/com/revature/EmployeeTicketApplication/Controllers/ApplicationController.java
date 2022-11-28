@@ -9,12 +9,14 @@ import com.revature.EmployeeTicketApplication.Services.ProfileService;
 import com.revature.EmployeeTicketApplication.Services.TicketService;
 import com.revature.EmployeeTicketApplication.Utils.Credentials;
 import com.revature.EmployeeTicketApplication.Utils.TicketRecord;
+import com.revature.EmployeeTicketApplication.Utils.TicketToJsonRecord;
 import com.revature.EmployeeTicketApplication.Utils.UpdateTicket;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationController {
@@ -165,8 +167,20 @@ public class ApplicationController {
             context.json("You are not an administrator, you are not permitted to view other people's tickets!");
         } else {
             List<Ticket> ticketList = ticketService.getAllPending();
-            System.out.println(ticketList);
-            context.json(ticketList);
+
+            List<TicketToJsonRecord> jsonList = new ArrayList<>();
+
+            for (Ticket ticket : ticketList) {
+                jsonList.add(new TicketToJsonRecord(
+                        ticket.getTicketID(),
+                        ticket.getUsername(),
+                        ticket.getSubmissionDate().toString(),
+                        Double.toString(ticket.getAmount()),
+                        ticket.getTicketStatus().toString()
+                ));
+            }
+
+            context.json(jsonList);
         }
     }
 
