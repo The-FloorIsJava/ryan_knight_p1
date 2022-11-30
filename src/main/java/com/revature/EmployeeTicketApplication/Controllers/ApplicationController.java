@@ -37,16 +37,16 @@ public class ApplicationController {
     public void run() {
 
         // Post handlers
-        app.post("registerEmployee",this::registerEmployee);
-        app.post("registerAdministrator",this::registerAdministrator);
+        app.post("register-employee",this::registerEmployee);
+        app.post("register-administrator",this::registerAdministrator);
         app.post("login",this::login);
-        app.post("submitTicket",this::submitTicket);
-        app.post("updateTicket",this::updateTicketStatus);
+        app.post("submit-ticket",this::submitTicket);
+        app.post("update-ticket",this::updateTicketStatus);
 
         // Get handlers
-        app.get("pendingTickets",this::getAllPending);
-        app.get("getMyTickets",this::getTicketsAssociatedWithProfile);
-        app.get("getTicket",this::getTicketByID);
+        app.get("pending-tickets",this::getAllPending);
+        app.get("get-my-tickets",this::getTicketsAssociatedWithProfile);
+        app.get("get-ticket",this::getTicketByID);
 
         // delete handlers
         app.delete("logout",this::logout);
@@ -59,6 +59,7 @@ public class ApplicationController {
      * @param context object.
      * */
     private void registerEmployee(Context context) {
+
         ObjectMapper mapper = new ObjectMapper();
         try {
             register(context,mapper.readValue(context.body(),EmployeeProfile.class));
