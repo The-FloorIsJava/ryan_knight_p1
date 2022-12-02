@@ -40,12 +40,12 @@ public class ApplicationController {
         app.post("register-employee",this::registerEmployee);
         app.post("register-administrator",this::registerAdministrator);
         app.post("login",this::login);
-        app.post("submit-ticket",this::submitTicket);
-        app.post("update-ticket",this::updateTicketStatus);
+        app.post("{username}/submit-ticket",this::submitTicket);
+        app.post("{username}/update-ticket",this::updateTicketStatus);
 
         // Get handlers
         app.get("pending-tickets",this::getAllPending);
-        app.get("get-my-tickets",this::getTicketsAssociatedWithProfile);
+        app.get("{username}/tickets",this::getTicketsAssociatedWithProfile);
         app.get("get-ticket",this::getTicketByID);
 
         // delete handlers
