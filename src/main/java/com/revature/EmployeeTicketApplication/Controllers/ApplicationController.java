@@ -2,11 +2,14 @@ package com.revature.EmployeeTicketApplication.Controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.EmployeeTicketApplication.AccountExceptions.AccountDoesNotExistException;
+import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordException;
 import com.revature.EmployeeTicketApplication.DAO.ProfileDAO;
 import com.revature.EmployeeTicketApplication.DAO.TicketDAO;
 import com.revature.EmployeeTicketApplication.Models.*;
 import com.revature.EmployeeTicketApplication.Services.ProfileService;
 import com.revature.EmployeeTicketApplication.Services.TicketService;
+import com.revature.EmployeeTicketApplication.Token.JWTUtility;
 import com.revature.EmployeeTicketApplication.Utils.Credentials;
 import com.revature.EmployeeTicketApplication.Utils.TicketRecord;
 import com.revature.EmployeeTicketApplication.Utils.TicketToJsonRecord;
@@ -24,13 +27,15 @@ public class ApplicationController {
     private final Javalin app;
     private final ProfileService profileService;
     private final TicketService ticketService;
+    private final JWTUtility jwtUtility;
 
     public ApplicationController(Javalin javalin, ProfileService profileService,
-                                 TicketService ticketService) {
+                                 TicketService ticketService, JWTUtility jwtUtility) {
 
         this.profileService = profileService;
         this.ticketService = ticketService;
-        app = javalin;
+        this.app = javalin;
+        this.jwtUtility = jwtUtility;
 
     }
 
@@ -40,7 +45,7 @@ public class ApplicationController {
         app.post("register-employee",this::registerEmployee);
         app.post("register-administrator",this::registerAdministrator);
         app.post("login",this::login);
-        app.post("{username}/submit-ticket",this::submitTicket);
+        app.post("{username}/ticket",this::submitTicket);
         app.post("{username}/update-ticket",this::updateTicketStatus);
 
         // Get handlers
@@ -48,8 +53,6 @@ public class ApplicationController {
         app.get("{username}/tickets",this::getTicketsAssociatedWithProfile);
         app.get("get-ticket",this::getTicketByID);
 
-        // delete handlers
-        app.delete("logout",this::logout);
 
     }
 
@@ -89,8 +92,7 @@ public class ApplicationController {
     private void register(Context context, PasswordProtectedProfile passwordProtectedProfile) {
 
         if (profileService.register(passwordProtectedProfile)) {
-            profileService.login(passwordProtectedProfile.getUsername(), passwordProtectedProfile.getPassword());
-            context.json("Profile successfully created, now logged in as " + passwordProtectedProfile.getUsername());
+            context.json("Profile successfully created for" + passwordProtectedProfile.getUsername());
         } else {
             context.json("Profile associated with username \"" + passwordProtectedProfile.getUsername()
             + "\" already exists.");
@@ -100,35 +102,33 @@ public class ApplicationController {
     /**
      *
      * */
-    private void login(Context context) {
+    private void login(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
+        Credentials credentials = mapper.readValue(context.body(), Credentials.class);
+
         try {
 
-            Credentials credentials = mapper.readValue(context.body(), Credentials.class);
-            profileService.login(credentials.username(),credentials.password());
+            // Verify credentials are valid.
+            PasswordProtectedProfile profile = profileService.login(credentials.username(), credentials.password());
+            String token = jwtUtility.createToken(profile);
+            context.header("Authorization",token);
+            context.json("Loged in as " + credentials.username());
 
-            if (profileService.getAuthorizedAccount()!=null) {
-                context.json("Logged in as " + profileService.getAuthorizedAccount().getUsername());
-            } else {
-                context.json("Bad credentials, no account exists with given username and password.");
-            }
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (BadPasswordException e) {
+            context.status(404);
+            context.json("Invalid password");
+        } catch (AccountDoesNotExistException e) {
+            context.status(404);
+            context.json("No account exists with username " + credentials.username());
+        } catch (Exception e) {
+            e.printStackTrace();
+            context.status(500);
+            context.json("Server side issue");
         }
 
     }
 
-    private void logout(Context context) {
 
-        if (profileService.getAuthorizedAccount() != null) {
-            context.json("Logging out " + profileService.getAuthorizedAccount().getUsername());
-            profileService.logout();
-        } else {
-            context.json("There is no one to logout.");
-        }
-
-    }
 
     private void submitTicket(Context context) {
 
@@ -143,7 +143,7 @@ public class ApplicationController {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
+        /*
         // Ensure user is logged in.
         if (profileService.getAuthorizedAccount()==null) {
             context.json("Login to submit ticket.");
@@ -161,12 +161,12 @@ public class ApplicationController {
             Ticket ticket = new Ticket(profileService.getAuthorizedAccount().getUsername(),description,amount);
             ticketService.enterTicket(ticket);
             context.json("Ticket submitted for " + amount);
-        }
+        }*/
 
     }
 
     private void getAllPending(Context context) {
-
+        /*
         // Confirm someone is logged in.
         if (profileService.getAuthorizedAccount()==null) {
             context.json("Login in as administrator to view pending tickets");
@@ -178,11 +178,11 @@ public class ApplicationController {
             List<TicketToJsonRecord> jsonList = fromTicketListToTicketToJsonRecordList(ticketList);
 
             context.json(jsonList);
-        }
+        }*/
     }
 
     private void getTicketsAssociatedWithProfile(Context context) {
-
+        /*
         if (profileService.getAuthorizedAccount()==null) {
             context.json("Login to view your tickets.");
         } else {
@@ -191,6 +191,8 @@ public class ApplicationController {
             List<TicketToJsonRecord> jsonList = fromTicketListToTicketToJsonRecordList(ticketList);
             context.json(jsonList);
         }
+        */
+
 
     }
 
@@ -202,7 +204,7 @@ public class ApplicationController {
 
 
     private void updateTicketStatus(Context context) {
-
+        /*
         if (profileService.getAuthorizedAccount()==null) {
             context.json("Login as administrator to update ticket.");
         } else if (!profileService.getAuthorizedAccount().isAdministrator()) {
@@ -225,7 +227,7 @@ public class ApplicationController {
                         TicketStatus.valueOf(updateTicket.status().toUpperCase()));
                 context.json("Ticket successfully updated.");
             }
-        }
+        }*/
     }
 
     /**
