@@ -14,7 +14,9 @@ public class Main {
         // Setup dependencies
         ProfileService profileService = new ProfileService(new ProfileDAO());
         TicketService ticketService = new TicketService(new TicketDAO());
-        Javalin javalin = Javalin.create().start(8080);
+        Javalin javalin = Javalin.create(
+
+        ).start(8080);
         JWTUtility jwtUtility = new JWTUtility();
 
         // Build controller with above dependencies and run application.
