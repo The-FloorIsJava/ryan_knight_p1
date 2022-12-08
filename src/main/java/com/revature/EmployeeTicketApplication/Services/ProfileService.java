@@ -1,5 +1,7 @@
 package com.revature.EmployeeTicketApplication.Services;
 
+import com.revature.EmployeeTicketApplication.AccountExceptions.AccountDoesNotExistException;
+import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordException;
 import com.revature.EmployeeTicketApplication.DAO.DAO;
 import com.revature.EmployeeTicketApplication.Models.PasswordProtectedProfile;
 import com.revature.EmployeeTicketApplication.Models.ProfileFactory;
@@ -15,17 +17,11 @@ public class ProfileService {
     private final DAO<PasswordProtectedProfile,String> profileStringDAO;
 
     /**
-     * An account which has been authorized via the login method, null by default.
-     * */
-    private PasswordProtectedProfile authorizedAccount;
-
-    /**
      * Constructor
      * @param profileStringDAO data access object to be manipulated.
      * */
     public ProfileService(DAO<PasswordProtectedProfile,String> profileStringDAO) {
         this.profileStringDAO = profileStringDAO;
-        this.authorizedAccount = null;
     }
 
     /**
@@ -54,30 +50,17 @@ public class ProfileService {
      * @param password of account being loged into.
      * @return true if the account exists and the password is valid, otherwise returns false.
      * */
-    public boolean login(String username, String password) {
+    public PasswordProtectedProfile login(String username, String password) throws BadPasswordException, AccountDoesNotExistException {
 
-        PasswordProtectedProfile passwordProtectedProfile = profileStringDAO.get(username);
+       PasswordProtectedProfile passwordProtectedProfile = profileStringDAO.get(username);
 
         if (passwordProtectedProfile ==null) {
-            return false;
-        } else if (passwordProtectedProfile.getPassword().equals(password)) {
-            // If profile exists, confirm password and administrator status match.
-            authorizedAccount = passwordProtectedProfile;
-            return true;
+            throw new AccountDoesNotExistException();
+        } else if (!passwordProtectedProfile.getPassword().equals(password)) {
+            throw new BadPasswordException();
         } else {
-            return false;
+            return passwordProtectedProfile;
         }
-
     }
-
-
-    public void logout() {
-        authorizedAccount = null;
-    }
-
-    public PasswordProtectedProfile getAuthorizedAccount() {
-        return authorizedAccount;
-    }
-
 
 }
