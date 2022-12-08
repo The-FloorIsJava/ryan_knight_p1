@@ -14,7 +14,13 @@ public class Main {
         // Setup dependencies
         ProfileService profileService = new ProfileService(new ProfileDAO());
         TicketService ticketService = new TicketService(new TicketDAO());
-        Javalin javalin = Javalin.create(
+        Javalin javalin = Javalin.create(config -> {
+            config.plugins.enableCors(cors ->{
+                cors.add(it ->{
+                    it.anyHost();
+                });
+            });
+        }
 
         ).start(8080);
         JWTUtility jwtUtility = new JWTUtility();
