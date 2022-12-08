@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.EmployeeTicketApplication.AccountExceptions.AccountDoesNotExistException;
 import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordException;
 import com.revature.EmployeeTicketApplication.AccountExceptions.UnauthorizedAccessException;
-import com.revature.EmployeeTicketApplication.DAO.ProfileDAO;
-import com.revature.EmployeeTicketApplication.DAO.TicketDAO;
 import com.revature.EmployeeTicketApplication.Models.*;
 import com.revature.EmployeeTicketApplication.Services.ProfileService;
 import com.revature.EmployeeTicketApplication.Services.TicketService;
@@ -18,8 +16,6 @@ import com.revature.EmployeeTicketApplication.Utils.UpdateTicket;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -280,6 +276,8 @@ public class ApplicationController {
                     ticket.getTicketID(),
                     ticket.getUsername(),
                     ticket.getSubmissionDate().toString(),
+                    //added in description below and in model
+                    ticket.getDescription(),
                     Double.toString(ticket.getAmount()),
                     ticket.getTicketStatus().toString()
             ));
