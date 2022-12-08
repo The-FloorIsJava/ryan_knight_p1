@@ -43,14 +43,14 @@ public class ApplicationController {
     public void run() {
 
         // Post handlers
-        app.post("register-employee",this::registerEmployee);
-        app.post("register-administrator",this::registerAdministrator);
+        app.post("employee",this::registerEmployee);
+        app.post("administrator",this::registerAdministrator);
         app.post("login",this::login);
         app.post("{username}/ticket",this::postTicketHandler);
         app.post("{username}/update-ticket",this::updateTicketStatus);
 
         // Get handlers
-        app.get("pending-tickets",this::getAllPending);
+        app.get("{username}/tickets/pending",this::getAllPendingHandler);
         app.get("{username}/tickets",this::getTicketsAssociatedWithProfile);
         app.get("get-ticket",this::getTicketByID);
 
@@ -134,7 +134,7 @@ public class ApplicationController {
     private void postTicketHandler(Context context) {
 
         ObjectMapper mapper = new ObjectMapper();
-        String token = context.header("Authorization").split(" ")[1];
+        String token = getTokenFromContext(context);
 
         PasswordProtectedProfile profile = jwtUtility.extractToken(token);
         String username =  context.pathParam("username");
@@ -161,20 +161,30 @@ public class ApplicationController {
         }
     }
 
-    private void getAllPending(Context context) {
-        /*
-        // Confirm someone is logged in.
-        if (profileService.getAuthorizedAccount()==null) {
-            context.json("Login in as administrator to view pending tickets");
-        } else if (!profileService.getAuthorizedAccount().isAdministrator()) {
-            context.json("You are not an administrator, you are not permitted to view other people's tickets!");
-        } else {
+    private void getAllPendingHandler(Context context) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        String token = getTokenFromContext(context);
+
+        PasswordProtectedProfile profile = jwtUtility.extractToken(token);
+        String username =  context.pathParam("username");
+
+        try {
+            if(!username.equals(profile.getUsername())) {
+                throw new UnauthorizedAccessException("Not logged in as " + username);
+            } else if (!profile.isAdministrator()) {
+                throw new UnauthorizedAccessException(username + " is not an administrator");
+            }
+
             List<Ticket> ticketList = ticketService.getAllPending();
-
             List<TicketToJsonRecord> jsonList = fromTicketListToTicketToJsonRecordList(ticketList);
-
             context.json(jsonList);
-        }*/
+
+        } catch (UnauthorizedAccessException e) {
+            context.status(403);
+            context.json(e.toString());
+        }
+
     }
 
     private void getTicketsAssociatedWithProfile(Context context) {
@@ -228,10 +238,13 @@ public class ApplicationController {
 
 
         String token = getTokenFromContext(context);
-
         System.out.println(token);
-
         PasswordProtectedProfile profile = jwtUtility.extractToken(token);
+
+        try {
+
+        }
+
 
         // Confirm profile belongs to an administrator.
         if (!profile.isAdministrator()) {
