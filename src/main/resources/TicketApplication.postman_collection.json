@@ -1,4 +1,4 @@
-{
+git{
 	"info": {
 		"_postman_id": "2aab1f59-7484-425d-9789-1866fa8a40a5",
 		"name": "TicketApplication",
@@ -62,12 +62,23 @@
 		},
 		{
 			"name": "localhost:8080/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"Authorization\",pm.response.headers.get(\"Authorization\"))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\":\"AquinTom\",\n    \"password\":\"password\"\n}",
+					"raw": "{\n    \"username\":\"CromOliv\",\n    \"password\":\"password\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -106,22 +117,28 @@
 			"response": []
 		},
 		{
-			"name": "localhost:8080/submit-ticket",
+			"name": "localhost:8080/{username}/ticket",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\":\"57\",\n    \"description\":\"Food\"\n}"
+					"raw": "{\n    \"amount\":\"57\",\n    \"description\":\"Food\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
-					"raw": "localhost:8080/submit-ticket",
+					"raw": "localhost:8080/CromOliv/ticket",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"submit-ticket"
+						"CromOliv",
+						"ticket"
 					]
 				}
 			},
@@ -158,13 +175,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8080/get-my-tickets",
+					"raw": "localhost:8080/dArcJ/tickets",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"get-my-tickets"
+						"dArcJ",
+						"tickets"
 					]
 				}
 			},
@@ -176,13 +194,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/getTicket",
+					"raw": "localhost:8080/get-ticket",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"getTicket"
+						"get-ticket"
 					]
 				}
 			},
@@ -190,12 +208,23 @@
 		},
 		{
 			"name": "localhost:8080/update-ticket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"ticket_id\":1,\n    \"status\":\"declined\"\n}",
+					"raw": "{\n    \"ticket_id\":10,\n    \"status\":\"approved\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -203,13 +232,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/updateTicket",
+					"raw": "localhost:8080/CromOliv/update-ticket",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"updateTicket"
+						"CromOliv",
+						"update-ticket"
 					]
 				}
 			},
