@@ -113,7 +113,9 @@ public class ApplicationController {
             PasswordProtectedProfile profile = profileService.login(credentials.username(), credentials.password());
             String token = jwtUtility.createToken(profile);
             context.header("Authorization",token);
+            System.out.println(token);
             context.json("Logged in as " + credentials.username());
+
 
         } catch (BadPasswordException e) {
             context.status(404);
@@ -238,7 +240,7 @@ public class ApplicationController {
 
 
         String token = getTokenFromContext(context);
-        System.out.println(token);
+
         PasswordProtectedProfile profile = jwtUtility.extractToken(token);
 
         // Confirm profile belongs to an administrator.

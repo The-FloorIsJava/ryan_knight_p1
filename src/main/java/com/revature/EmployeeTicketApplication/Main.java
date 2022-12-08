@@ -20,6 +20,7 @@ public class Main {
             config.plugins.enableCors(cors ->{
                 cors.add(it ->{
                     it.anyHost();
+                    it.exposeHeader("Authorization");
                 });
             });
         }
