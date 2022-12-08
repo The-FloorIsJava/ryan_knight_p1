@@ -7,11 +7,6 @@ import com.revature.EmployeeTicketApplication.Services.ProfileService;
 import com.revature.EmployeeTicketApplication.Services.TicketService;
 import io.javalin.Javalin;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Properties;
-
 public class Main {
     public static void main(String[] args) {
 
