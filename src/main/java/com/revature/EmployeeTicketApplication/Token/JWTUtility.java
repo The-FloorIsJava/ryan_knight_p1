@@ -64,7 +64,9 @@ public class JWTUtility {
     }
 
     public boolean isTokenValid(String token){
+
         if(token == null || token.trim().equals("")) {
+            System.out.println("DDDDDDD");
             return false;
         } else {
             return parseToken(token).isPresent();

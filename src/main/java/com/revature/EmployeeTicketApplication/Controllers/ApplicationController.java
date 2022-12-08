@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.EmployeeTicketApplication.AccountExceptions.AccountDoesNotExistException;
 import com.revature.EmployeeTicketApplication.AccountExceptions.BadPasswordException;
+import com.revature.EmployeeTicketApplication.AccountExceptions.UnauthorizedAccessException;
 import com.revature.EmployeeTicketApplication.DAO.ProfileDAO;
 import com.revature.EmployeeTicketApplication.DAO.TicketDAO;
 import com.revature.EmployeeTicketApplication.Models.*;
@@ -45,7 +46,7 @@ public class ApplicationController {
         app.post("register-employee",this::registerEmployee);
         app.post("register-administrator",this::registerAdministrator);
         app.post("login",this::login);
-        app.post("{username}/ticket",this::submitTicket);
+        app.post("{username}/ticket",this::postTicketHandler);
         app.post("{username}/update-ticket",this::updateTicketStatus);
 
         // Get handlers
@@ -112,7 +113,7 @@ public class ApplicationController {
             PasswordProtectedProfile profile = profileService.login(credentials.username(), credentials.password());
             String token = jwtUtility.createToken(profile);
             context.header("Authorization",token);
-            context.json("Loged in as " + credentials.username());
+            context.json("Logged in as " + credentials.username());
 
         } catch (BadPasswordException e) {
             context.status(404);
@@ -130,39 +131,34 @@ public class ApplicationController {
 
 
 
-    private void submitTicket(Context context) {
+    private void postTicketHandler(Context context) {
 
         ObjectMapper mapper = new ObjectMapper();
+        String token = context.header("Authorization").split(" ")[1];
+
+        PasswordProtectedProfile profile = jwtUtility.extractToken(token);
+        String username =  context.pathParam("username");
+
+
 
         // Get amount from posted json content.
         double amount;
         String description;
         try {
+
+            if (!username.equals(profile.getUsername())) {
+                throw new UnauthorizedAccessException();
+            }
+
             amount = mapper.readValue(context.body(), TicketRecord.class).amount();
             description = mapper.readValue(context.body(),TicketRecord.class).description();
+            ticketService.enterTicket(new Ticket(profile.getUsername(), description,amount));
+        } catch (UnauthorizedAccessException e) {
+            context.status(400);
+            context.json("Not logged in as " + username);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        /*
-        // Ensure user is logged in.
-        if (profileService.getAuthorizedAccount()==null) {
-            context.json("Login to submit ticket.");
-        }
-        //  Ensure amount is not less than or equal to 0.
-        else if (amount <= 0) {
-            context.json("Invalid ticket amount, must be greater than 0.");
-        }
-        // Ensure valid description is used.
-        else if (description == null || description.length() == 0) {
-            context.json("Ticket submission must include valid description.");
-        }
-        // Submit ticket for authorized account.
-        else {
-            Ticket ticket = new Ticket(profileService.getAuthorizedAccount().getUsername(),description,amount);
-            ticketService.enterTicket(ticket);
-            context.json("Ticket submitted for " + amount);
-        }*/
-
     }
 
     private void getAllPending(Context context) {
@@ -228,6 +224,39 @@ public class ApplicationController {
                 context.json("Ticket successfully updated.");
             }
         }*/
+
+
+
+        String token = getTokenFromContext(context);
+
+        System.out.println(token);
+
+        PasswordProtectedProfile profile = jwtUtility.extractToken(token);
+
+        // Confirm profile belongs to an administrator.
+        if (!profile.isAdministrator()) {
+            context.status(403);
+            context.json("Unauthorized request");
+        } else {
+            ObjectMapper mapper = new ObjectMapper();
+            UpdateTicket updateTicket;
+
+            try {
+                updateTicket = mapper.readValue(context.body(),UpdateTicket.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Prohibit ticket from being updated if it has already been processed.
+            if (ticketService.getTicketByID(updateTicket.ticket_id()).getTicketStatus()!= TicketStatus.PENDING) {
+                context.json("Ticket already processed.");
+            } else {
+                ticketService.updateTicketStatus(updateTicket.ticket_id(),
+                        TicketStatus.valueOf(updateTicket.status().toUpperCase()));
+                context.json("Ticket successfully updated.");
+            }
+        }
+
     }
 
     /**
@@ -246,6 +275,15 @@ public class ApplicationController {
             ));
         }
         return jsonList;
+    }
+
+    /**
+     * Method written to make it easy to adjust how token is recieved.
+     * @param context - context object.
+     * @ return token
+     * */
+    private String getTokenFromContext(Context context){
+        return context.header("Authorization").split(" ")[1];
     }
 
 }
