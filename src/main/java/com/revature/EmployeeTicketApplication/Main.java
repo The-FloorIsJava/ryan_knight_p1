@@ -13,6 +13,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException{
 
+
         // Setup dependencies
         ProfileService profileService = new ProfileService(new ProfileDAO());
         TicketService ticketService = new TicketService(new TicketDAO());
@@ -20,6 +21,7 @@ public class Main {
             config.plugins.enableCors(cors ->{
                 cors.add(it ->{
                     it.anyHost();
+                    it.exposeHeader("Authorization");
                 });
             });
         }
