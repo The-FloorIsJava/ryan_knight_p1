@@ -291,7 +291,7 @@ public class ApplicationController {
      * @ return token
      * */
     private String getTokenFromContext(Context context){
-        return context.header("Authorization").split(" ")[1];
+        return context.header("Authorization");/*.split(" ")[1];*/
     }
 
 }

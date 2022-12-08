@@ -8,8 +8,10 @@ import com.revature.EmployeeTicketApplication.Services.TicketService;
 import com.revature.EmployeeTicketApplication.Token.JWTUtility;
 import io.javalin.Javalin;
 
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, IOException {
 
         // Setup dependencies
         ProfileService profileService = new ProfileService(new ProfileDAO());
