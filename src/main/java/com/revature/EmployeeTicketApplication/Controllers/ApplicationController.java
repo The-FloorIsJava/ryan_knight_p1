@@ -241,11 +241,6 @@ public class ApplicationController {
         System.out.println(token);
         PasswordProtectedProfile profile = jwtUtility.extractToken(token);
 
-        try {
-
-        }
-
-
         // Confirm profile belongs to an administrator.
         if (!profile.isAdministrator()) {
             context.status(403);
